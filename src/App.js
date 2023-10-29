@@ -64,7 +64,6 @@ function App() {
 
                     setWord(characters);
                 });
-            console.log("Word Set");
             setWordSet(true);
         }
     }, []);
@@ -94,22 +93,16 @@ function App() {
             }
         });
 
-        // console.log(alphabet);
-        console.log(word);
-        // console.log(alphabets);
-
         if (alphabetNotNull != true) {
             console.log("alphabetNull" + alphabetNotNull);
             let alphabetInWord = false;
 
             word.forEach((character) => {
-                // console.log(character.character);
                 if (character.character.toLowerCase() == alphabet) {
                     alphabetInWord = true;
                     setCorrecttCounter((correctCounter) => correctCounter + 1);
                 }
             });
-            console.log(alphabetInWord);
 
             if (alphabetInWord) {
                 let newAlphabets = alphabets.map((character) =>
@@ -126,7 +119,6 @@ function App() {
                         : character
                 );
 
-                // setCorrecttCounter(correctCounter + 1);
                 setWord(newWord);
             } else {
                 let newAlphabets = alphabets.map((character) =>
@@ -138,7 +130,6 @@ function App() {
                 setAlphabets(newAlphabets);
 
                 setWrongCounter(wrongCounter + 1);
-                // console.log(wrongCounter);
 
                 setHangmanImage(
                     `/images/hangmandrawings/state${wrongCounter}.gif`
@@ -148,32 +139,100 @@ function App() {
     };
 
     // function that refreshes the page
-    function refreshPage() {
+    const refreshPage = () => {
         window.location.reload(false);
-    }
+    };
+
+    // open rules modal
+    const openRules = () => {
+        const favDialog = document.querySelector(".rules-popup");
+
+        favDialog.showModal();
+    };
 
     return (
-        <div className="main-container">
-            <div className="input-container">
-                <Hangman image={hangmanImage} />
+        <main className="main-container">
+            <h1>Hangman</h1>
+            <p className="intro">Click on a letter to begin the game.</p>
+            <section className="input-container">
+                <div className="hangmanImage-container">
+                    <Hangman image={hangmanImage} />
+                    <div className="main-input">
+                        <div className="main-buttons">
+                            <Button
+                                text="Restart"
+                                onClick={refreshPage}
+                                className="btn-retry"
+                            />
+                            <Button
+                                text="Rules"
+                                className="btn-rules"
+                                onClick={openRules}
+                            />
+                        </div>
+
+                        <p className="win-or-lose">
+                            {word.length === correctCounter && (
+                                <p>Congratulations. You won</p>
+                            )}
+                            {lost && (
+                                <p>
+                                    You lost. The word was:{" "}
+                                    {word.map(
+                                        (character) => character.character
+                                    )}
+                                    .
+                                </p>
+                            )}
+                        </p>
+                    </div>
+                </div>
+
                 <div className="input-output">
                     <Word word={word} />
+
                     <Alphabets
                         alphabets={alphabets}
                         checkAlphabet={checkAlphabet}
                         word={word}
                     />
                 </div>
-            </div>
-            <p className="win-or-lose">
-                {word.length === correctCounter && "Congratulations. You won."}
-                {lost && "You lost. You will win next time!"}
-                {word.length === correctCounter && (
-                    <Button text="Retry" onClick={refreshPage} />
-                )}
-                {lost && <Button text="Retry" onClick={refreshPage} />}
-            </p>
-        </div>
+            </section>
+            {/* Pop up menu that displays the rules of the game */}
+            <dialog className="rules-popup">
+                <form method="dialog">
+                    <h2>Rules</h2>
+                    <ul>
+                        <li>
+                            Select any character on the page to begin the game.
+                        </li>
+                        <li>
+                            If you guess a letter incorrectly, a limb will be
+                            added to the stickman and the color scheme of the
+                            character will be changed to red.
+                        </li>
+                        <li>
+                            If you guess a letter correctly, it will be added
+                            above the underline in the word. The color scheme
+                            will also be changed to green.
+                        </li>
+                        <li>
+                            Note that once you select a character. It cannot be
+                            selected again.
+                        </li>
+                        <li>
+                            You have 11 attempts to guess the letters correctly.
+                        </li>
+                        <li>You can restart the game at any time.</li>
+                    </ul>
+                    <Button
+                        text="Close"
+                        className="btn-rules"
+                        onClick={openRules}
+                    />
+                </form>
+            </dialog>
+        </main>
     );
 }
 

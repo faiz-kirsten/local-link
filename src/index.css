@@ -90,7 +90,8 @@ select {
 /* Main container */
 .main-container {
     width: 70em;
-    margin: 4em auto;
+    height: 100vh;
+    margin: 1em auto;
 }
 
 /* Word Styling */
@@ -98,6 +99,10 @@ select {
     display: flex;
     gap: 2em;
     margin: 2em 0;
+}
+
+.intro {
+    font-size: 1.6rem;
 }
 
 /* Character styling */
@@ -109,7 +114,7 @@ select {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 4px black solid;
+    border-bottom: 2px black solid;
 }
 
 /* When the characters 'correct' value is changed to true */
@@ -119,11 +124,9 @@ select {
 
 /* Alphabet styling */
 .alphabets {
-    margin-top: 1em;
-    display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
-    width: 38em;
-    gap: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
 }
 
 .alphabet {
@@ -136,31 +139,76 @@ select {
     font-size: 2rem;
     text-transform: uppercase;
     cursor: pointer;
+    border-radius: 50%;
 }
 
 .alphabet.correct {
-    /* background-color: green; */
-    border: 3px solid green;
+    border: 1px solid green;
     color: green;
 }
 
 .alphabet.incorrect {
-    border: 3px solid red;
+    border: 1px solid red;
     color: red;
 }
 
 /* Hangman image */
+.image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .image {
-    border: 3px solid #333;
-    padding: 2em;
+    padding: 2em 3em;
 }
 
 /* Input container */
-.input-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    align-items: center;
+.input-container > div {
+    margin: 2em;
 }
 
 .input-output {
+}
+
+.win-or-lose {
+    margin: 1em auto;
+    font-size: 1.6rem;
+}
+
+.hangmanImage-container {
+    display: flex;
+    gap: 2em;
+}
+
+.main-input {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-buttons {
+    display: flex;
+    gap: 1em;
+}
+
+/* Btn */
+.btn {
+    border: 2px solid black;
+    padding: 0.4em 0.8em;
+    border-radius: 0.4rem;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.btn:hover {
+    color: #834242;
+    border: #834242 2px solid;
+}
+
+/* Rules pop ups */
+:modal {
+    border-radius: 1rem;
 }
