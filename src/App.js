@@ -3,7 +3,6 @@ import dir from "./dictionary.txt";
 import Word from "./components/Word";
 import Alphabets from "./components/Alphabets";
 import Hangman from "./components/Hangman";
-import Button from "./components/Button";
 import Rules from "./components/Rules";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -83,17 +82,17 @@ function App() {
         // ensures the the alphabet can only be clicked on once
         let alphabetNotNull = false;
         alphabets.forEach((character) => {
-            if (character.char == alphabet) {
+            if (character.char === alphabet) {
                 alphabetNotNull = character.set != null && true;
             }
         });
 
-        if (alphabetNotNull != true) {
+        if (alphabetNotNull !== true) {
             let alphabetInWord = false; // determines whether the alphabet the user clicks is in the word
 
             // the array(word) of characters is looped through and the value of the key 'character' for each iteration is converted to a lowercase and then compared to 'alphabet'
             word.forEach((character) => {
-                if (character.character.toLowerCase() == alphabet) {
+                if (character.character.toLowerCase() === alphabet) {
                     alphabetInWord = true;
                     // increments the correctCounter by one
                     setCorrecttCounter((correctCounter) => correctCounter + 1);
@@ -112,7 +111,7 @@ function App() {
 
                 // A new array is created using map by changing the value of the 'correct' key to true for the object within 'word' of the alphabet that was clicked
                 let newWord = word.map((character) =>
-                    character.character.toLowerCase() == alphabet
+                    character.character.toLowerCase() === alphabet
                         ? { ...character, correct: true }
                         : character
                 );
