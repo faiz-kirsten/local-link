@@ -42,7 +42,7 @@ function App() {
     ]); // used to change the color of the letter by changing the set value in each letter to green(true) or red(false)
 
     const [hangmanImage, setHangmanImage] = useState(
-        "/images/hangmandrawings/state1.gif"
+        "../images/hangmandrawings/state1.gif"
     ); // state to keep track of the image being displayed to the user when they get a character wrong
 
     const [wrongCounter, setWrongCounter] = useState(2);
@@ -130,7 +130,7 @@ function App() {
                 setWrongCounter(wrongCounter + 1);
                 // Changes the image based on the value of 'wrongCounter'
                 setHangmanImage(
-                    `/images/hangmandrawings/state${wrongCounter}.gif`
+                    `../images/hangmandrawings/state${wrongCounter}.gif`
                 );
             }
         }
