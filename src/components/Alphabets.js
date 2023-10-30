@@ -1,5 +1,6 @@
 import Alphabet from "./Alphabet";
 
+// Iterates through each object in 'alphabets' and maps each object(alphabet) to the 'Alphabet' component
 const Alphabets = ({ alphabets, checkAlphabet, word }) => {
     return (
         <div className="alphabets">

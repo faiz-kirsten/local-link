@@ -1,10 +1,11 @@
 import Button from "./Button";
 
+// Displays the rules of the game using a dialog which creates a modal
 const Rules = ({ onClick }) => {
     return (
-        <dialog className="rules-popup">
-            <form method="dialog">
-                <h2>Rules</h2>
+        <dialog className="rules">
+            <form method="dialog" className="rules-content">
+                <h2>Rules & Help</h2>
                 <ul>
                     <li>Select any character on the page to begin the game.</li>
                     <li>
@@ -22,11 +23,11 @@ const Rules = ({ onClick }) => {
                         selected again.
                     </li>
                     <li>
-                        You have 10 attempts to guess the letters correctly.
+                        You can restart the game at any time which will select a
+                        random word.
                     </li>
-                    <li>You can restart the game at any time.</li>
                 </ul>
-                <Button text="Close" className="btn-rules" onClick={onClick} />
+                <Button text="Close" onClick={onClick} />
             </form>
         </dialog>
     );

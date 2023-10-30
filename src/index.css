@@ -89,9 +89,9 @@ select {
 
 /* Main container */
 .main-container {
-    width: 70em;
+    width: 55em;
     height: 100vh;
-    margin: 1em auto;
+    margin: 2em auto;
 }
 
 /* Header */
@@ -123,7 +123,7 @@ select {
 }
 
 .intro {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 /* Character styling */
@@ -135,7 +135,7 @@ select {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 2px black solid;
+    border-bottom: 3px black solid;
 
     /* prevent the user from trying to reveal the text by trying to copy it*/
     -webkit-user-select: none;
@@ -150,7 +150,7 @@ select {
     color: #333;
 }
 
-/* Alphabet styling */
+/* Alphabets styling */
 .alphabets {
     display: flex;
     flex-wrap: wrap;
@@ -158,6 +158,7 @@ select {
     width: 51em;
 }
 
+/* Alphabet styling */
 .alphabet {
     border: #333 solid 1px;
     width: 1.8em;
@@ -177,16 +178,14 @@ select {
 }
 
 .alphabet.correct {
-    border: 1px solid green;
-    color: green;
+    border: 1px solid #16a34a;
+    color: #16a34a;
 }
 
 .alphabet.incorrect {
-    border: 1px solid red;
-    color: red;
+    border: 1px solid #e11d48;
+    color: #e11d48;
 }
-
-/* Hangman image */
 
 .secondary-container {
     display: flex;
@@ -197,14 +196,18 @@ select {
 /* Win or lose message */
 .final-message {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
+    justify-content: center;
+    flex-direction: column;
     font-size: 1.4rem;
+    gap: 8px;
 }
 
 /* button styling */
 .btn {
-    border: 2px solid black;
-    padding: 0.4em 0.8em;
+    border: 2px solid #333;
+    font-weight: bold;
+    padding: 0.2em 0.4em;
     border-radius: 0.4rem;
     background-color: #fff;
     cursor: pointer;
@@ -217,11 +220,20 @@ select {
     color: #fff;
 }
 
-/* Rules pop ups */
+/* Rules modal styling */
 :modal {
-    border-radius: 1rem;
+    border-radius: 0.6rem;
     width: 30em;
-    padding: 2em;
+    padding: 1.6em;
+}
+
+.rules::backdrop {
+    background: #f1f5f966;
+}
+
+.rules-content {
+    display: grid;
+    gap: 0.8em;
 }
 
 .correct-word {

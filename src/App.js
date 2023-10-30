@@ -7,6 +7,7 @@ import Button from "./components/Button";
 import Rules from "./components/Rules";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import FinalMessage from "./components/FinalMessage";
 
 function App() {
     const [word, setWord] = useState([]); // stores each letter of the word as an array of characters
@@ -50,8 +51,6 @@ function App() {
     // used to help output whether the user won, counts the amount of letters they got correct and matches it to the length of the word
     const [correctCounter, setCorrecttCounter] = useState(0);
 
-    // Win state
-
     useEffect(() => {
         if (!wordSet) {
             // Reads from 'dictionary.txt'
@@ -75,14 +74,8 @@ function App() {
     }, []);
 
     const checkAlphabet = (alphabet, word, alphabets) => {
-        console.log(word);
-        if (correctCounter === word.length) {
-            console.log(correctCounter);
-            return;
-        }
-
-        if (wrongCounter > 11) {
-            console.log(wrongCounter);
+        // Ends the game by not allowing the user to select more letters
+        if (correctCounter === word.length || wrongCounter > 11) {
             return;
         }
 
@@ -96,32 +89,37 @@ function App() {
         });
 
         if (alphabetNotNull != true) {
-            let alphabetInWord = false;
+            let alphabetInWord = false; // determines whether the alphabet the user clicks is in the word
 
+            // the array(word) of characters is looped through and the value of the key 'character' for each iteration is converted to a lowercase and then compared to 'alphabet'
             word.forEach((character) => {
                 if (character.character.toLowerCase() == alphabet) {
                     alphabetInWord = true;
+                    // increments the correctCounter by one
                     setCorrecttCounter((correctCounter) => correctCounter + 1);
                 }
             });
 
             if (alphabetInWord) {
+                // A new array is created using map by changing the value of the 'set' key to true for the object within 'alphabets' of the alphabet that was clicked on
                 let newAlphabets = alphabets.map((character) =>
                     character.char === alphabet
                         ? { ...character, set: true }
                         : character
                 );
 
-                setAlphabets(newAlphabets);
+                setAlphabets(newAlphabets); // updates the state of 'alphabets' with the updated array
 
+                // A new array is created using map by changing the value of the 'correct' key to true for the object within 'word' of the alphabet that was clicked
                 let newWord = word.map((character) =>
                     character.character.toLowerCase() == alphabet
                         ? { ...character, correct: true }
                         : character
                 );
 
-                setWord(newWord);
+                setWord(newWord); // updates the state of 'word' with the updated array
             } else {
+                // A new array is created using map by changing the value of the 'set' key to false for the object within 'alphabets' of the alphabet that was clicked on
                 let newAlphabets = alphabets.map((character) =>
                     character.char === alphabet.toLowerCase()
                         ? { ...character, set: false }
@@ -129,7 +127,9 @@ function App() {
                 );
 
                 setAlphabets(newAlphabets);
+                // increments the wrongCounter by one
                 setWrongCounter(wrongCounter + 1);
+                // Changes the image based on the value of 'wrongCounter'
                 setHangmanImage(
                     `/images/hangmandrawings/state${wrongCounter}.gif`
                 );
@@ -144,16 +144,16 @@ function App() {
 
     // open rules modal
     const openRules = () => {
-        const favDialog = document.querySelector(".rules-popup");
+        const rulesPopupElement = document.querySelector(".rules");
 
-        favDialog.showModal();
+        rulesPopupElement.showModal(); // shows the modal
     };
 
     return (
         <main className="main-container">
             <Header refreshPage={refreshPage} openRules={openRules} />
-            <section>
-                <p className="intro">
+            <section className="intro">
+                <p>
                     Start guesing the word by clicking on a letter to begin the
                     game. You can restart to change the word.
                 </p>
@@ -162,34 +162,21 @@ function App() {
                 <div className="secondary-container">
                     <Hangman image={hangmanImage} />
 
-                    <div className="final-message">
-                        {/* {word.length === correctCounter && (
-                            <p>Congratulations. You won!!</p>
-                        )}
-                        {lost && (
-                            <p>
-                                You lost. The word was:{" "}
-                                <div className="correct-word">
-                                    {word.map(
-                                        (character) => character.character
-                                    )}
-                                </div>
-                            </p>
-                        )} */}
-
-                        <p className="win-message"></p>
-                    </div>
-                </div>
-
-                <div className="input-output">
-                    <Word word={word} />
-
-                    <Alphabets
-                        alphabets={alphabets}
-                        checkAlphabet={checkAlphabet}
+                    <FinalMessage
+                        correctCounter={correctCounter}
+                        wrongCounter={wrongCounter}
                         word={word}
+                        refreshPage={refreshPage}
                     />
                 </div>
+
+                <Word word={word} />
+
+                <Alphabets
+                    alphabets={alphabets}
+                    checkAlphabet={checkAlphabet}
+                    word={word}
+                />
             </section>
             {/* Pop up menu that displays the rules of the game */}
             <Rules onClick={openRules} />
