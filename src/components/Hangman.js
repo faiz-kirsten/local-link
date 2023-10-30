@@ -1,9 +1,5 @@
 const Hangman = ({ image }) => {
-    return (
-        <div>
-            <img src={image} className="image" />
-        </div>
-    );
+    return <img src={image} />;
 };
 
 export default Hangman;

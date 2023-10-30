@@ -94,11 +94,32 @@ select {
     margin: 1em auto;
 }
 
+/* Header */
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 1em 0 3em 0;
+}
+
+/* Footer */
+.main-footer {
+    text-align: center;
+    color: #333;
+    margin-top: 3em;
+}
+
+/* Logo Styling */
+.logo {
+    font-size: 2rem;
+    font-weight: bolder;
+}
+
 /* Word Styling */
 .word {
     display: flex;
-    gap: 2em;
-    margin: 2em 0;
+    gap: 1em;
+    margin-bottom: 2em;
 }
 
 .intro {
@@ -115,6 +136,13 @@ select {
     align-items: center;
     justify-content: center;
     border-bottom: 2px black solid;
+
+    /* prevent the user from trying to reveal the text by trying to copy it*/
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* When the characters 'correct' value is changed to true */
@@ -127,19 +155,25 @@ select {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4em;
+    width: 51em;
 }
 
 .alphabet {
     border: #333 solid 1px;
-    width: 2em;
-    height: 2em;
+    width: 1.8em;
+    height: 1.8em;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.8rem;
     text-transform: uppercase;
     cursor: pointer;
     border-radius: 50%;
+}
+
+.alphabet:hover {
+    border: #0891b2 1px solid;
+    color: #0891b2;
 }
 
 .alphabet.correct {
@@ -153,62 +187,49 @@ select {
 }
 
 /* Hangman image */
-.image-container {
+
+.secondary-container {
+    display: flex;
+    gap: 8em;
+    margin: 2em 0;
+}
+
+/* Win or lose message */
+.final-message {
     display: flex;
     align-items: center;
-    justify-content: center;
+    font-size: 1.4rem;
 }
 
-.image {
-    padding: 2em 3em;
-}
-
-/* Input container */
-.input-container > div {
-    margin: 2em;
-}
-
-.input-output {
-}
-
-.win-or-lose {
-    margin: 1em auto;
-    font-size: 1.6rem;
-}
-
-.hangmanImage-container {
-    display: flex;
-    gap: 2em;
-}
-
-.main-input {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    align-items: center;
-    justify-content: center;
-}
-
-.main-buttons {
-    display: flex;
-    gap: 1em;
-}
-
-/* Btn */
+/* button styling */
 .btn {
     border: 2px solid black;
     padding: 0.4em 0.8em;
     border-radius: 0.4rem;
     background-color: #fff;
     cursor: pointer;
+    text-transform: uppercase;
 }
 
 .btn:hover {
-    color: #834242;
-    border: #834242 2px solid;
+    background-color: #0891b2;
+    border: #0891b2 2px solid;
+    color: #fff;
 }
 
 /* Rules pop ups */
 :modal {
     border-radius: 1rem;
+    width: 30em;
+    padding: 2em;
+}
+
+.correct-word {
+    font-size: 2rem;
+}
+
+/* Nav menu */
+.navbar {
+    display: flex;
+    gap: 0.4em;
 }

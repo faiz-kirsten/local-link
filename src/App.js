@@ -4,11 +4,13 @@ import Word from "./components/Word";
 import Alphabets from "./components/Alphabets";
 import Hangman from "./components/Hangman";
 import Button from "./components/Button";
+import Rules from "./components/Rules";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function App() {
     const [word, setWord] = useState([]); // stores each letter of the word as an array of characters
     const [wordSet, setWordSet] = useState(false); // sets whether the random word has been set
-    // const [character, setCharacter] = useState("");
     const [alphabets, setAlphabets] = useState([
         { char: "a", set: null },
         { char: "b", set: null },
@@ -37,27 +39,31 @@ function App() {
         { char: "y", set: null },
         { char: "z", set: null },
         { char: "-", set: null },
-    ]);
-
-    const [lost, setLost] = useState(false);
+    ]); // used to change the color of the letter by changing the set value in each letter to green(true) or red(false)
 
     const [hangmanImage, setHangmanImage] = useState(
         "/images/hangmandrawings/state1.gif"
-    );
+    ); // state to keep track of the image being displayed to the user when they get a character wrong
+
     const [wrongCounter, setWrongCounter] = useState(2);
 
     // used to help output whether the user won, counts the amount of letters they got correct and matches it to the length of the word
     const [correctCounter, setCorrecttCounter] = useState(0);
 
+    // Win state
+
     useEffect(() => {
         if (!wordSet) {
+            // Reads from 'dictionary.txt'
             fetch(dir)
                 .then((row) => row.text())
                 .then((text) => {
-                    const words = text.split("\n");
-                    const randomNum = Math.floor(Math.random() * words.length);
+                    const words = text.split("\n"); // splits each line in the text file by '\n'
+                    const randomNum = Math.floor(Math.random() * words.length); // returns a random number
+                    // indexes the word at the given array and splits it to create an array of characters
                     let wordCharacters = words[randomNum].split("");
 
+                    // each character in 'wordCharacters' is mapped to an object which is stored in 'characters'
                     let characters = wordCharacters.map((character) => {
                         return { character: character, correct: false };
                     });
@@ -69,32 +75,27 @@ function App() {
     }, []);
 
     const checkAlphabet = (alphabet, word, alphabets) => {
+        console.log(word);
         if (correctCounter === word.length) {
+            console.log(correctCounter);
             return;
         }
 
-        if (wrongCounter == 11) {
-            setHangmanImage("/images/hangmandrawings/state11.gif");
-        }
-
-        if (wrongCounter >= 11) {
-            setLost(true);
+        if (wrongCounter > 11) {
+            console.log(wrongCounter);
             return;
         }
-        console.log("Correct counter," + correctCounter);
 
         // check my alphabet is not null
         // ensures the the alphabet can only be clicked on once
         let alphabetNotNull = false;
         alphabets.forEach((character) => {
-            // console.log(character.character);
             if (character.char == alphabet) {
                 alphabetNotNull = character.set != null && true;
             }
         });
 
         if (alphabetNotNull != true) {
-            console.log("alphabetNull" + alphabetNotNull);
             let alphabetInWord = false;
 
             word.forEach((character) => {
@@ -128,9 +129,7 @@ function App() {
                 );
 
                 setAlphabets(newAlphabets);
-
                 setWrongCounter(wrongCounter + 1);
-
                 setHangmanImage(
                     `/images/hangmandrawings/state${wrongCounter}.gif`
                 );
@@ -152,39 +151,33 @@ function App() {
 
     return (
         <main className="main-container">
-            <h1>Hangman</h1>
-            <p className="intro">Click on a letter to begin the game.</p>
-            <section className="input-container">
-                <div className="hangmanImage-container">
+            <Header refreshPage={refreshPage} openRules={openRules} />
+            <section>
+                <p className="intro">
+                    Start guesing the word by clicking on a letter to begin the
+                    game. You can restart to change the word.
+                </p>
+            </section>
+            <section>
+                <div className="secondary-container">
                     <Hangman image={hangmanImage} />
-                    <div className="main-input">
-                        <div className="main-buttons">
-                            <Button
-                                text="Restart"
-                                onClick={refreshPage}
-                                className="btn-retry"
-                            />
-                            <Button
-                                text="Rules"
-                                className="btn-rules"
-                                onClick={openRules}
-                            />
-                        </div>
 
-                        <p className="win-or-lose">
-                            {word.length === correctCounter && (
-                                <p>Congratulations. You won</p>
-                            )}
-                            {lost && (
-                                <p>
-                                    You lost. The word was:{" "}
+                    <div className="final-message">
+                        {/* {word.length === correctCounter && (
+                            <p>Congratulations. You won!!</p>
+                        )}
+                        {lost && (
+                            <p>
+                                You lost. The word was:{" "}
+                                <div className="correct-word">
                                     {word.map(
                                         (character) => character.character
                                     )}
-                                    .
-                                </p>
-                            )}
-                        </p>
+                                </div>
+                            </p>
+                        )} */}
+
+                        <p className="win-message"></p>
                     </div>
                 </div>
 
@@ -199,39 +192,8 @@ function App() {
                 </div>
             </section>
             {/* Pop up menu that displays the rules of the game */}
-            <dialog className="rules-popup">
-                <form method="dialog">
-                    <h2>Rules</h2>
-                    <ul>
-                        <li>
-                            Select any character on the page to begin the game.
-                        </li>
-                        <li>
-                            If you guess a letter incorrectly, a limb will be
-                            added to the stickman and the color scheme of the
-                            character will be changed to red.
-                        </li>
-                        <li>
-                            If you guess a letter correctly, it will be added
-                            above the underline in the word. The color scheme
-                            will also be changed to green.
-                        </li>
-                        <li>
-                            Note that once you select a character. It cannot be
-                            selected again.
-                        </li>
-                        <li>
-                            You have 11 attempts to guess the letters correctly.
-                        </li>
-                        <li>You can restart the game at any time.</li>
-                    </ul>
-                    <Button
-                        text="Close"
-                        className="btn-rules"
-                        onClick={openRules}
-                    />
-                </form>
-            </dialog>
+            <Rules onClick={openRules} />
+            <Footer />
         </main>
     );
 }
