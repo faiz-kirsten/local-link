@@ -28,10 +28,6 @@ Clone the project
   git clone https://github.com/faiz-kirsten/react-hangman.git
 ```
 
-## Features
-
--   Add Features
-
 ## Screenshots
 
 ![App Screenshot](Link)
