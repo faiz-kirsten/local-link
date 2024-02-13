@@ -1,18 +1,16 @@
-# Getting Started with Create React App
+# Hangman
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a website version of the game hangman. This is a barebones version which I built to practice state management in React.js.
 
-## Available Scripts
+## Demo
 
-In the project directory, you can run:
+![App Screenshot](Link)<br>
+[Live Demo](Link)
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+-   **Languages:** JavaScript, CSS
+-   **Libraries:** React.js
 
 ## Game Rules
 
@@ -22,8 +20,18 @@ You may also see any lint errors in the console.
 -   Note that once you select a character. It cannot be selected again.
 -   You can restart the game at any time which will select a random word from 'dictionary.txt' in the src folder.
 
-## Learn More
+## Run Locally
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Clone the project
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+  git clone https://github.com/faiz-kirsten/react-hangman.git
+```
+
+## Features
+
+-   Add Features
+
+## Screenshots
+
+![App Screenshot](Link)
