@@ -1,7 +1,13 @@
 import Button from "./Button";
 
 // Displays whether the user has won or lost
-const FinalMessage = ({ wrongCounter, correctCounter, word, refreshPage }) => {
+const FinalMessage = ({
+    wrongCounter,
+    correctCounter,
+    word,
+    refreshPage,
+    correctWord,
+}) => {
     return (
         <div className="final-message">
             {word.length === correctCounter && (
@@ -9,15 +15,10 @@ const FinalMessage = ({ wrongCounter, correctCounter, word, refreshPage }) => {
             )}
             {wrongCounter > 11 && <p>You lost. The word was</p>}
             {wrongCounter > 11 && (
-                <div className="correct-word">
-                    {word.map((character) => character.character)}
-                </div>
+                <div className="correct-word">{correctWord}</div>
             )}
-            {/* Displays this button when the game is over */}
-            {word.length === correctCounter ||
-                (wrongCounter > 11 && (
-                    <Button text="Play Again" onClick={refreshPage} />
-                ))}
+
+            <Button text="Play Again" onClick={refreshPage} />
         </div>
     );
 };

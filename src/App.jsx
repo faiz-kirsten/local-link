@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import dir from "./dictionary.txt";
 import Word from "./components/Word";
 import Alphabets from "./components/Alphabets";
 import Hangman from "./components/Hangman";
@@ -7,6 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FinalMessage from "./components/FinalMessage";
 import { VscLoading } from "react-icons/vsc";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 import hangmanImg1 from "./assets/hangmandrawings/state1.GIF";
 import hangmanImg2 from "./assets/hangmandrawings/state2.GIF";
@@ -19,6 +19,11 @@ import hangmanImg8 from "./assets/hangmandrawings/state8.GIF";
 import hangmanImg9 from "./assets/hangmandrawings/state9.GIF";
 import hangmanImg10 from "./assets/hangmandrawings/state10.gif";
 import hangmanImg11 from "./assets/hangmandrawings/state11.GIF";
+
+const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
+
+// For text-only input, use the gemini-pro model
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 const hangmanImgs = [
     hangmanImg1,
@@ -36,6 +41,11 @@ const hangmanImgs = [
 
 function App() {
     const [word, setWord] = useState([]); // stores each letter of the word as an array of characters
+    const [wordDetails, setWordDetails] = useState({
+        hints: null,
+        word: null,
+        category: null,
+    });
     const [wordSet, setWordSet] = useState(false); // sets whether the random word has been set
     const [loading, setLoading] = useState(true);
     const [alphabets, setAlphabets] = useState([
@@ -66,6 +76,7 @@ function App() {
         { char: "y", set: null },
         { char: "z", set: null },
         { char: "-", set: null },
+        { char: " ", set: null },
     ]); // used to change the color of the letter by changing the set value in each letter to green(true) or red(false)
 
     const [hangmanImage, setHangmanImage] = useState(hangmanImgs[0]); // state to keep track of the image being displayed to the user when they get a character wrong
@@ -77,25 +88,58 @@ function App() {
 
     useEffect(() => {
         if (!wordSet) {
-            // Reads from 'dictionary.txt'
-            setLoading(false);
-            fetch(dir)
-                .then((row) => row.text())
-                .then((text) => {
-                    const words = text.split("\n"); // splits each line in the text file by '\n'
-                    const randomNum = Math.floor(Math.random() * words.length); // returns a random number
-                    // indexes the word at the given array and splits it to create an array of characters
-                    let wordCharacters = words[randomNum].split("");
+            async function generateWord() {
+                const categories = [
+                    "Any",
+                    "Animals",
+                    "Vehicles",
+                    "Music",
+                    "Movies",
+                    "Television Series",
+                    "Sports",
+                ];
 
-                    // each character in 'wordCharacters' is mapped to an object which is stored in 'characters'
-                    let characters = wordCharacters.map((character) => {
-                        return { character: character, correct: false };
-                    });
+                const randomInt = Math.floor(Math.random() * (6 - 0 + 1)) + 0;
+                const randomCategory = categories[randomInt];
 
-                    setWord(characters);
-                    setLoading(false);
-                    setWordSet(true);
+                const prompt = `Hey, could you generate a random word for Hangman? I need it to be from this category: ${randomCategory}, provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint. Please provide the word, hints, and category in the following format:  {"word" : "Lion", "category": "Animal" , "hints": {"hint1": "It is a animal that roars", "hint2": "It is the king of the jungle"}}.`;
+
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                const text = response.text();
+                console.log(text);
+                const data = await JSON.parse(text);
+                console.log(data);
+
+                // indexes the word at the given array and splits it to create an array of characters
+                let splitChars = await data.word.split("");
+                console.log(splitChars);
+
+                let chars = splitChars.map((character) => {
+                    return { character: character, correct: false };
                 });
+
+                // let wordInfo = {
+                //     characters: chars,
+                //     word: data.word,
+                //     hints: data.hints,
+                // };
+
+                // console.log(wordInfo);
+                // console.log(wordInfo.characters);
+                setWord(chars);
+                setWordDetails({
+                    hints: data.hints,
+                    word: data.word,
+                    category: randomCategory,
+                });
+
+                console.log("==========");
+                setLoading(false);
+                setWordSet(true);
+            }
+
+            generateWord();
         }
     }, [wordSet]);
 
@@ -197,6 +241,7 @@ function App() {
         setWord([]);
         setHangmanImage(hangmanImgs[0]);
         setWordSet(false);
+        setLoading(true);
     };
 
     // open rules modal
@@ -209,12 +254,12 @@ function App() {
     return (
         <main className="main-container">
             <Header refreshPage={refreshPage} openRules={openRules} />
-            {loading ? (
+            {loading && !wordSet ? (
                 <VscLoading />
             ) : (
                 <>
                     <section className="intro">
-                        <p>Choose a category below:</p>
+                        <p>Word from category: {wordDetails.category}</p>
                     </section>
                     <section className="intro">
                         <p>
@@ -227,14 +272,15 @@ function App() {
                             <Hangman image={hangmanImage} />
 
                             {correctCounter === word.length ||
-                                (wrongCounter > 11 && (
-                                    <FinalMessage
-                                        correctCounter={correctCounter}
-                                        wrongCounter={wrongCounter}
-                                        word={word}
-                                        refreshPage={refreshPage}
-                                    />
-                                ))}
+                            wrongCounter > 11 ? (
+                                <FinalMessage
+                                    correctCounter={correctCounter}
+                                    wrongCounter={wrongCounter}
+                                    word={word}
+                                    correctWord={wordDetails.word}
+                                    refreshPage={refreshPage}
+                                />
+                            ) : undefined}
                         </div>
 
                         <Word word={word} />
