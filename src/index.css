@@ -150,6 +150,10 @@ select {
     color: #333;
 }
 
+.character.showSpace {
+    background-color: #333;
+}
+
 /* Alphabets styling */
 .alphabets {
     display: flex;
@@ -186,6 +190,8 @@ select {
     border: 1px solid #e11d48;
     color: #e11d48;
 }
+
+/* Style correct space differently */
 
 .secondary-container {
     display: flex;

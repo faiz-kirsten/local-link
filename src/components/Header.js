@@ -7,7 +7,6 @@ const Header = ({ openRules, refreshPage }) => {
             <span className="logo">Hangman</span>
             <nav className="navbar">
                 <Button text="Restart" onClick={refreshPage} />
-                <Button text="Rules" onClick={openRules} />
             </nav>
         </header>
     );

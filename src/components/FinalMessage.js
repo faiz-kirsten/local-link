@@ -13,9 +13,11 @@ const FinalMessage = ({
             {word.length === correctCounter && (
                 <p>Congratulations. You won!!</p>
             )}
-            {wrongCounter > 11 && <p>You lost. The word was</p>}
             {wrongCounter > 11 && (
-                <div className="correct-word">{correctWord}</div>
+                <>
+                    <p>You lost. The word was</p>
+                    <div className="correct-word">{correctWord}</div>
+                </>
             )}
 
             <Button text="Play Again" onClick={refreshPage} />

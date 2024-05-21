@@ -97,12 +97,14 @@ function App() {
                     "Movies",
                     "Television Series",
                     "Sports",
+                    "Countries",
+                    "Cities",
                 ];
 
-                const randomInt = Math.floor(Math.random() * (6 - 0 + 1)) + 0;
+                const randomInt = Math.floor(Math.random() * (8 - 0 + 1)) + 0;
                 const randomCategory = categories[randomInt];
 
-                const prompt = `Hey, could you generate a random word for Hangman? I need it to be from this category: ${randomCategory}, provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint. Please provide the word, hints, and category in the following format:  {"word" : "Lion", "category": "Animal" , "hints": {"hint1": "It is a animal that roars", "hint2": "It is the king of the jungle"}}.`;
+                const prompt = `Hey, could you generate a random word for Hangman? I need it to be from this category: ${randomCategory}, provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint. Please provide the word, hints, and category in the following format:  {"word" : "Lion", "category": "Animal" , "hints": {"hint1": "...", "hint2": "...", "hint3": "...", "hint4": "...", "hint5": "..."}}`;
 
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
@@ -237,6 +239,7 @@ function App() {
             { char: "y", set: null },
             { char: "z", set: null },
             { char: "-", set: null },
+            { char: " ", set: null },
         ]);
         setWord([]);
         setHangmanImage(hangmanImgs[0]);
