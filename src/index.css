@@ -173,7 +173,7 @@ select {
     font-size: 1.8rem;
     text-transform: uppercase;
     cursor: pointer;
-    border-radius: 50%;
+    border-radius: 0.5rem;
 }
 
 .alphabet:hover {

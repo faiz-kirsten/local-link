@@ -104,7 +104,7 @@ function App() {
                 const randomInt = Math.floor(Math.random() * (8 - 0 + 1)) + 0;
                 const randomCategory = categories[randomInt];
 
-                const prompt = `Hey, could you generate a random word for Hangman? I need it to be from this category: ${randomCategory}, provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint. Please provide the word, hints, and category in the following format:  {"word" : "Lion", "category": "Animal" , "hints": {"hint1": "...", "hint2": "...", "hint3": "...", "hint4": "...", "hint5": "..."}}`;
+                const prompt = `Generate a random example from this category: ${randomCategory}, provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint. Please provide the example, hints, and category in the following format:  {"word" : "example", "category": "Animal" , "hints": {"hint1": "...", "hint2": "...", "hint3": "...", "hint4": "...", "hint5": "..."}}`;
 
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
@@ -121,14 +121,6 @@ function App() {
                     return { character: character, correct: false };
                 });
 
-                // let wordInfo = {
-                //     characters: chars,
-                //     word: data.word,
-                //     hints: data.hints,
-                // };
-
-                // console.log(wordInfo);
-                // console.log(wordInfo.characters);
                 setWord(chars);
                 setWordDetails({
                     hints: data.hints,
@@ -208,7 +200,7 @@ function App() {
     };
 
     // function that refreshes the page
-    const refreshPage = () => {
+    const restartGame = () => {
         setWrongCounter(2);
         setCorrecttCounter(0);
         setAlphabets([
@@ -247,16 +239,9 @@ function App() {
         setLoading(true);
     };
 
-    // open rules modal
-    const openRules = () => {
-        const rulesPopupElement = document.querySelector(".rules");
-
-        rulesPopupElement.showModal(); // shows the modal
-    };
-
     return (
         <main className="main-container">
-            <Header refreshPage={refreshPage} openRules={openRules} />
+            <Header restartGame={restartGame} />
             {loading && !wordSet ? (
                 <VscLoading />
             ) : (
@@ -281,7 +266,7 @@ function App() {
                                     wrongCounter={wrongCounter}
                                     word={word}
                                     correctWord={wordDetails.word}
-                                    refreshPage={refreshPage}
+                                    restartGame={restartGame}
                                 />
                             ) : undefined}
                         </div>

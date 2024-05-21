@@ -5,7 +5,7 @@ const FinalMessage = ({
     wrongCounter,
     correctCounter,
     word,
-    refreshPage,
+    restartGame,
     correctWord,
 }) => {
     return (
@@ -20,7 +20,7 @@ const FinalMessage = ({
                 </>
             )}
 
-            <Button text="Play Again" onClick={refreshPage} />
+            <Button text="Play Again" onClick={restartGame} />
         </div>
     );
 };
