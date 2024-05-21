@@ -3,10 +3,10 @@ import dir from "./dictionary.txt";
 import Word from "./components/Word";
 import Alphabets from "./components/Alphabets";
 import Hangman from "./components/Hangman";
-import Rules from "./components/Rules";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FinalMessage from "./components/FinalMessage";
+import { VscLoading } from "react-icons/vsc";
 
 import hangmanImg1 from "./assets/hangmandrawings/state1.GIF";
 import hangmanImg2 from "./assets/hangmandrawings/state2.GIF";
@@ -37,6 +37,7 @@ const hangmanImgs = [
 function App() {
     const [word, setWord] = useState([]); // stores each letter of the word as an array of characters
     const [wordSet, setWordSet] = useState(false); // sets whether the random word has been set
+    const [loading, setLoading] = useState(true);
     const [alphabets, setAlphabets] = useState([
         { char: "a", set: null },
         { char: "b", set: null },
@@ -77,6 +78,7 @@ function App() {
     useEffect(() => {
         if (!wordSet) {
             // Reads from 'dictionary.txt'
+            setLoading(false);
             fetch(dir)
                 .then((row) => row.text())
                 .then((text) => {
@@ -91,10 +93,11 @@ function App() {
                     });
 
                     setWord(characters);
+                    setLoading(false);
+                    setWordSet(true);
                 });
-            setWordSet(true);
         }
-    }, []);
+    }, [wordSet]);
 
     const checkAlphabet = (alphabet, word, alphabets) => {
         // Ends the game by not allowing the user to select more letters
@@ -153,7 +156,6 @@ function App() {
                 // increments the wrongCounter by one
                 setWrongCounter(wrongCounter + 1);
                 // Changes the image based on the value of 'wrongCounter'
-                console.log(wrongCounter);
                 setHangmanImage(hangmanImgs[wrongCounter - 1]);
             }
         }
@@ -161,7 +163,40 @@ function App() {
 
     // function that refreshes the page
     const refreshPage = () => {
-        window.location.reload(false);
+        setWrongCounter(2);
+        setCorrecttCounter(0);
+        setAlphabets([
+            { char: "a", set: null },
+            { char: "b", set: null },
+            { char: "c", set: null },
+            { char: "d", set: null },
+            { char: "e", set: null },
+            { char: "f", set: null },
+            { char: "g", set: null },
+            { char: "h", set: null },
+            { char: "i", set: null },
+            { char: "j", set: null },
+            { char: "k", set: null },
+            { char: "l", set: null },
+            { char: "m", set: null },
+            { char: "n", set: null },
+            { char: "o", set: null },
+            { char: "p", set: null },
+            { char: "q", set: null },
+            { char: "r", set: null },
+            { char: "s", set: null },
+            { char: "t", set: null },
+            { char: "u", set: null },
+            { char: "v", set: null },
+            { char: "w", set: null },
+            { char: "x", set: null },
+            { char: "y", set: null },
+            { char: "z", set: null },
+            { char: "-", set: null },
+        ]);
+        setWord([]);
+        setHangmanImage(hangmanImgs[0]);
+        setWordSet(false);
     };
 
     // open rules modal
@@ -174,34 +209,44 @@ function App() {
     return (
         <main className="main-container">
             <Header refreshPage={refreshPage} openRules={openRules} />
-            <section className="intro">
-                <p>
-                    Start guesing the word by clicking on a letter to begin the
-                    game. You can restart to change the word.
-                </p>
-            </section>
-            <section>
-                <div className="secondary-container">
-                    <Hangman image={hangmanImage} />
+            {loading ? (
+                <VscLoading />
+            ) : (
+                <>
+                    <section className="intro">
+                        <p>Choose a category below:</p>
+                    </section>
+                    <section className="intro">
+                        <p>
+                            Start guesing the word by clicking on a letter to
+                            begin the game. You can restart to change the word.
+                        </p>
+                    </section>
+                    <section>
+                        <div className="secondary-container">
+                            <Hangman image={hangmanImage} />
 
-                    <FinalMessage
-                        correctCounter={correctCounter}
-                        wrongCounter={wrongCounter}
-                        word={word}
-                        refreshPage={refreshPage}
-                    />
-                </div>
+                            {correctCounter === word.length ||
+                                (wrongCounter > 11 && (
+                                    <FinalMessage
+                                        correctCounter={correctCounter}
+                                        wrongCounter={wrongCounter}
+                                        word={word}
+                                        refreshPage={refreshPage}
+                                    />
+                                ))}
+                        </div>
 
-                <Word word={word} />
+                        <Word word={word} />
 
-                <Alphabets
-                    alphabets={alphabets}
-                    checkAlphabet={checkAlphabet}
-                    word={word}
-                />
-            </section>
-            {/* Pop up menu that displays the rules of the game */}
-            <Rules onClick={openRules} />
+                        <Alphabets
+                            alphabets={alphabets}
+                            checkAlphabet={checkAlphabet}
+                            word={word}
+                        />
+                    </section>
+                </>
+            )}
             <Footer />
         </main>
     );
