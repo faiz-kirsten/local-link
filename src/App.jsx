@@ -8,6 +8,32 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FinalMessage from "./components/FinalMessage";
 
+import hangmanImg1 from "./assets/hangmandrawings/state1.GIF";
+import hangmanImg2 from "./assets/hangmandrawings/state2.GIF";
+import hangmanImg3 from "./assets/hangmandrawings/state3.GIF";
+import hangmanImg4 from "./assets/hangmandrawings/state4.GIF";
+import hangmanImg5 from "./assets/hangmandrawings/state5.GIF";
+import hangmanImg6 from "./assets/hangmandrawings/state6.GIF";
+import hangmanImg7 from "./assets/hangmandrawings/state7.GIF";
+import hangmanImg8 from "./assets/hangmandrawings/state8.GIF";
+import hangmanImg9 from "./assets/hangmandrawings/state9.GIF";
+import hangmanImg10 from "./assets/hangmandrawings/state10.gif";
+import hangmanImg11 from "./assets/hangmandrawings/state11.GIF";
+
+const hangmanImgs = [
+    hangmanImg1,
+    hangmanImg2,
+    hangmanImg3,
+    hangmanImg4,
+    hangmanImg5,
+    hangmanImg6,
+    hangmanImg7,
+    hangmanImg8,
+    hangmanImg9,
+    hangmanImg10,
+    hangmanImg11,
+];
+
 function App() {
     const [word, setWord] = useState([]); // stores each letter of the word as an array of characters
     const [wordSet, setWordSet] = useState(false); // sets whether the random word has been set
@@ -41,9 +67,7 @@ function App() {
         { char: "-", set: null },
     ]); // used to change the color of the letter by changing the set value in each letter to green(true) or red(false)
 
-    const [hangmanImage, setHangmanImage] = useState(
-        "../images/hangmandrawings/state1.gif"
-    ); // state to keep track of the image being displayed to the user when they get a character wrong
+    const [hangmanImage, setHangmanImage] = useState(hangmanImgs[0]); // state to keep track of the image being displayed to the user when they get a character wrong
 
     const [wrongCounter, setWrongCounter] = useState(2);
 
@@ -129,9 +153,8 @@ function App() {
                 // increments the wrongCounter by one
                 setWrongCounter(wrongCounter + 1);
                 // Changes the image based on the value of 'wrongCounter'
-                setHangmanImage(
-                    `../images/hangmandrawings/state${wrongCounter}.gif`
-                );
+                console.log(wrongCounter);
+                setHangmanImage(hangmanImgs[wrongCounter - 1]);
             }
         }
     };
