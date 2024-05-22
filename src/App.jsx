@@ -101,7 +101,6 @@ function App() {
                 ];
                 // provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint.
                 const randomInt = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
-                console.log(randomInt);
                 const randomCategory = categories[randomInt];
 
                 const prompt = `Generate a random interesting, fun and unique example that doed not include special characters or numbers from this specific category: ${randomCategory} , provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint, do not include quotations in the hint. Please provide word, hints, and category in valid json format:  '{"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}'`;
@@ -109,7 +108,7 @@ function App() {
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
                 const text = response.text();
-                console.log(text);
+
                 function isValidJson(json) {
                     try {
                         JSON.parse(json);
@@ -118,13 +117,11 @@ function App() {
                         return false;
                     }
                 }
-                if (!isValidJson(text.toString())) console.log("No");
+                if (!isValidJson(text.toString())) return restartGame();
                 const data = await JSON.parse(text);
-                console.log(data);
 
                 // indexes the word at the given array and splits it to create an array of characters
                 let splitChars = await data.word.split("");
-                console.log(splitChars);
 
                 let chars = splitChars.map((character) => {
                     return { character: character, correct: false };
@@ -139,8 +136,6 @@ function App() {
                     (prevHintCount) => prevHintCount + spaces.length
                 );
 
-                console.log(spaces);
-
                 let dataHints = data.hints.map((hint) => {
                     return { ...hint, revealed: false };
                 });
@@ -153,8 +148,7 @@ function App() {
                     category: data.category,
                 };
                 setWordDetails(genWordDetails);
-                console.log(genWordDetails);
-                console.log("==========");
+
                 setLoading(false);
                 setWordSet(true);
             }
@@ -165,7 +159,6 @@ function App() {
 
     const checkAlphabet = (alphabet, word, alphabets) => {
         // Ends the game by not allowing the user to select more letters
-        console.log(correctCounter);
         if (correctCounter === word.length || wrongCounter > 11) {
             return;
         }
@@ -273,14 +266,12 @@ function App() {
 
     useEffect(() => {
         if (hintRevealed < 5 && hintRevealed >= 0) {
-            console.log(hintRevealed);
             const updatedHints = wordDetails.hints.map((hint) =>
                 hintRevealed === parseInt(hint.num) - 1
                     ? { ...hint, revealed: true }
                     : hint
             );
 
-            console.log(updatedHints);
             setWordDetails({ ...wordDetails, hints: updatedHints });
         }
     }, [hintRevealed]);
