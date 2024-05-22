@@ -78,7 +78,6 @@ function App() {
         { char: "y", set: null },
         { char: "z", set: null },
         { char: "-", set: null },
-        { char: " ", set: null },
     ]); // used to change the color of the letter by changing the set value in each letter to green(true) or red(false)
 
     const [hangmanImage, setHangmanImage] = useState(hangmanImgs[0]); // state to keep track of the image being displayed to the user when they get a character wrong
@@ -92,7 +91,6 @@ function App() {
         if (!wordSet) {
             async function generateWord() {
                 const categories = [
-                    "Any",
                     "Animals",
                     "Music",
                     "Movies",
@@ -100,18 +98,26 @@ function App() {
                     "Sports",
                     "Countries",
                     "Cities",
-                    "Famous People",
                 ];
                 // provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint.
-                const randomInt = Math.floor(Math.random() * (8 - 0 + 1)) + 0;
+                const randomInt = Math.floor(Math.random() * (7 - 0 + 1)) + 0;
                 const randomCategory = categories[randomInt];
 
-                const prompt = `Generate a random example from this category: ${randomCategory}, exclude examples that have special characters and numbers, provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint. Please provide the example, hints, and category in the following json format:  {"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}`;
+                const prompt = `Generate a random interesting, fun and unique example from this category: ${randomCategory} that does not include special characters or numbers, provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint, do not include quotations in the hint. Please provide word, hints, and category in this exact json format:  {"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}`;
 
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
                 const text = response.text();
                 console.log(text);
+                function isValidJson(json) {
+                    try {
+                        JSON.parse(json);
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+                if (!isValidJson(text)) restartGame();
                 const data = await JSON.parse(text);
                 console.log(data);
 
@@ -122,6 +128,17 @@ function App() {
                 let chars = splitChars.map((character) => {
                     return { character: character, correct: false };
                 });
+
+                // adds to the correct counter based on the amount of spaces in the word
+                const spaces = chars.filter(
+                    (char) => char.character === " " && char
+                );
+
+                setCorrecttCounter(
+                    (prevHintCount) => prevHintCount + spaces.length
+                );
+
+                console.log(spaces);
 
                 let dataHints = data.hints.map((hint) => {
                     return { ...hint, revealed: false };
@@ -147,6 +164,7 @@ function App() {
 
     const checkAlphabet = (alphabet, word, alphabets) => {
         // Ends the game by not allowing the user to select more letters
+        console.log(correctCounter);
         if (correctCounter === word.length || wrongCounter > 11) {
             return;
         }
@@ -239,7 +257,6 @@ function App() {
             { char: "y", set: null },
             { char: "z", set: null },
             { char: "-", set: null },
-            { char: " ", set: null },
         ]);
         setWord([]);
         setHangmanImage(hangmanImgs[0]);

@@ -3,7 +3,7 @@ const Character = ({ character }) => {
     return (
         <span
             className={`character ${character.correct && "show"} ${
-                character.correct & (character.character === " ") && "showSpace"
+                character.character === " " && "space"
             }`}>
             {character.character}
         </span>

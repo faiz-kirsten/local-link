@@ -150,8 +150,8 @@ select {
     color: #333;
 }
 
-.character.showSpace {
-    background-color: #333;
+.character.space {
+    border-bottom: none !important;
 }
 
 /* Alphabets styling */
