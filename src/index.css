@@ -131,6 +131,7 @@ select {
 /* Word Styling */
 .word {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.8em;
     margin-bottom: 1.5em;
 }
@@ -139,7 +140,7 @@ select {
 .character {
     /* Border bottom for the underline of the character */
     width: 1em;
-    font-size: 2rem;
+    font-size: 1.6rem;
     color: #fff;
     display: flex;
     align-items: center;
@@ -173,9 +174,9 @@ select {
 
 /* Alphabet styling */
 .alphabet {
-    border: #333 solid 1px;
-    width: 1.8em;
-    height: 1.8em;
+    border: #333 solid 0.8px;
+    width: 1.6em;
+    height: 1.6em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -219,7 +220,6 @@ select {
 /* Win or lose message */
 .final-message {
     display: flex;
-    /* align-items: center; */
     justify-content: center;
     flex-direction: column;
     font-size: 1.4rem;
@@ -250,6 +250,10 @@ select {
     cursor: pointer;
 }
 
+.icon:hover {
+    color: #0891b2;
+}
+
 /* Rules modal styling */
 :modal {
     border-radius: 0.6rem;
@@ -274,4 +278,19 @@ select {
 
 .image-hints {
     display: flex;
+}
+
+/* Loading animation source: https://css-loaders.com/ */
+.loader {
+    width: 60px;
+    aspect-ratio: 4;
+    background: radial-gradient(circle closest-side, #000 90%, #0000) 0 /
+        calc(100% / 3) 100% space;
+    clip-path: inset(0 100% 0 0);
+    animation: l1 1s steps(4) infinite;
+}
+@keyframes l1 {
+    to {
+        clip-path: inset(0 -34% 0 0);
+    }
 }

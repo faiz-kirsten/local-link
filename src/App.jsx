@@ -285,14 +285,26 @@ function App() {
         }
     }, [hintRevealed]);
 
+    // show info modal
+    const showInfoModal = () => {
+        const infoModal = document.querySelector("#dialog");
+
+        infoModal.showModal();
+    };
+    const closeInfoModal = () => {
+        const infoModal = document.querySelector("#dialog");
+
+        infoModal.close();
+    };
+
     return (
         <main className="main-container">
-            <Header restartGame={restartGame} />
+            <Header restartGame={restartGame} showInfoModal={showInfoModal} />
             {loading && !wordSet ? (
-                <>
-                    <VscLoading />
+                <div className="loading-animation">
+                    <div className="loader" />
                     <p>Fetching random word...</p>
-                </>
+                </div>
             ) : (
                 <>
                     <section>
@@ -306,16 +318,6 @@ function App() {
                             />
                         ) : (
                             <>
-                                <p>Chosen Category: {wordDetails.category}</p>
-
-                                <p>
-                                    Start the game by clicking on a letter. You
-                                    can generate a new random word by clicking
-                                    on the "refresh" icon. Clicking on the
-                                    "lightbulb" icon provides a hint for the
-                                    current word.
-                                </p>
-
                                 <Hangman image={hangmanImage} />
 
                                 <LuLightbulb
@@ -349,6 +351,19 @@ function App() {
                     </section>
                 </>
             )}
+            <dialog id="dialog">
+                <p>Chosen Category: {wordDetails.category}</p>
+
+                <p>
+                    Start the game by clicking on a letter. You can generate a
+                    new random word by clicking on the "refresh" icon. Clicking
+                    on the "lightbulb" icon provides a hint for the current
+                    word.
+                </p>
+                <button className="btn" onClick={closeInfoModal}>
+                    Close
+                </button>
+            </dialog>
             <Footer />
         </main>
     );
