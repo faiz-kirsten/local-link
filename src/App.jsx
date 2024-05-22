@@ -92,7 +92,6 @@ function App() {
             async function generateWord() {
                 const categories = [
                     "Animals",
-                    "Music",
                     "Movies",
                     "Television Series",
                     "Sports",
@@ -100,10 +99,11 @@ function App() {
                     "Cities",
                 ];
                 // provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint.
-                const randomInt = Math.floor(Math.random() * (7 - 0 + 1)) + 0;
+                const randomInt = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
+                console.log(randomInt);
                 const randomCategory = categories[randomInt];
 
-                const prompt = `Generate a random interesting, fun and unique example from this category: ${randomCategory} that does not include special characters or numbers, provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint, do not include quotations in the hint. Please provide word, hints, and category in this exact json format:  {"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}`;
+                const prompt = `Generate a random interesting, fun and unique example that doed not include special characters or numbers from this specific category: ${randomCategory} , provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint, do not include quotations in the hint. Please provide word, hints, and category in this exact json format:  '{"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}'`;
 
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
@@ -117,7 +117,7 @@ function App() {
                         return false;
                     }
                 }
-                if (!isValidJson(text)) restartGame();
+                if (!isValidJson(text.toString())) console.log("No");
                 const data = await JSON.parse(text);
                 console.log(data);
 
@@ -149,7 +149,7 @@ function App() {
                 const genWordDetails = {
                     hints: dataHints,
                     word: data.word,
-                    category: randomCategory,
+                    category: data.category,
                 };
                 setWordDetails(genWordDetails);
                 console.log(genWordDetails);
@@ -292,7 +292,9 @@ function App() {
                 <VscLoading />
             ) : (
                 <>
-                    <FaLightbulb onClick={showHint} />
+                    {correctCounter !== word.length && wrongCounter <= 11 ? (
+                        <FaLightbulb onClick={showHint} />
+                    ) : undefined}
                     {hintRevealed >= 0 && (
                         <>
                             <p>{hintRevealed}</p>
