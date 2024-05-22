@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FinalMessage from "./components/FinalMessage";
 import { VscLoading } from "react-icons/vsc";
+import { FaLightbulb } from "react-icons/fa";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 import hangmanImg1 from "./assets/hangmandrawings/state1.GIF";
@@ -48,6 +49,7 @@ function App() {
     });
     const [wordSet, setWordSet] = useState(false); // sets whether the random word has been set
     const [loading, setLoading] = useState(true);
+    const [hintRevealed, setHintRevealed] = useState(-1);
     const [alphabets, setAlphabets] = useState([
         { char: "a", set: null },
         { char: "b", set: null },
@@ -92,19 +94,19 @@ function App() {
                 const categories = [
                     "Any",
                     "Animals",
-                    "Vehicles",
                     "Music",
                     "Movies",
                     "Television Series",
                     "Sports",
                     "Countries",
                     "Cities",
+                    "Famous People",
                 ];
-
+                // provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint.
                 const randomInt = Math.floor(Math.random() * (8 - 0 + 1)) + 0;
                 const randomCategory = categories[randomInt];
 
-                const prompt = `Generate a random example from this category: ${randomCategory}, provide at least 5 hints that start off very vague and less obvious and become progressively more specific with each hint. Please provide the example, hints, and category in the following format:  {"word" : "example", "category": "Animal" , "hints": {"hint1": "...", "hint2": "...", "hint3": "...", "hint4": "...", "hint5": "..."}}`;
+                const prompt = `Generate a random example from this category: ${randomCategory}, exclude examples that have special characters and numbers, provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint. Please provide the example, hints, and category in the following json format:  {"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}`;
 
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
@@ -121,13 +123,19 @@ function App() {
                     return { character: character, correct: false };
                 });
 
-                setWord(chars);
-                setWordDetails({
-                    hints: data.hints,
-                    word: data.word,
-                    category: randomCategory,
+                let dataHints = data.hints.map((hint) => {
+                    return { ...hint, revealed: false };
                 });
 
+                setWord(chars);
+
+                const genWordDetails = {
+                    hints: dataHints,
+                    word: data.word,
+                    category: randomCategory,
+                };
+                setWordDetails(genWordDetails);
+                console.log(genWordDetails);
                 console.log("==========");
                 setLoading(false);
                 setWordSet(true);
@@ -237,7 +245,28 @@ function App() {
         setHangmanImage(hangmanImgs[0]);
         setWordSet(false);
         setLoading(true);
+        setHintRevealed(-1);
     };
+
+    const showHint = () => {
+        if (hintRevealed < 5) {
+            setHintRevealed((prevHintCount) => prevHintCount + 1);
+        }
+    };
+
+    useEffect(() => {
+        if (hintRevealed < 5 && hintRevealed >= 0) {
+            console.log(hintRevealed);
+            const updatedHints = wordDetails.hints.map((hint) =>
+                hintRevealed === parseInt(hint.num) - 1
+                    ? { ...hint, revealed: true }
+                    : hint
+            );
+
+            console.log(updatedHints);
+            setWordDetails({ ...wordDetails, hints: updatedHints });
+        }
+    }, [hintRevealed]);
 
     return (
         <main className="main-container">
@@ -246,6 +275,20 @@ function App() {
                 <VscLoading />
             ) : (
                 <>
+                    <FaLightbulb onClick={showHint} />
+                    {hintRevealed >= 0 && (
+                        <>
+                            <p>{hintRevealed}</p>
+                            <div>
+                                {wordDetails.hints.map(
+                                    (hint, index) =>
+                                        hint.revealed === true && (
+                                            <p key={index}>{hint.hint}</p>
+                                        )
+                                )}
+                            </div>
+                        </>
+                    )}
                     <section className="intro">
                         <p>Word from category: {wordDetails.category}</p>
                     </section>
