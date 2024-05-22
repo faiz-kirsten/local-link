@@ -1,4 +1,5 @@
-import Button from "./Button";
+import { LuRefreshCw } from "react-icons/lu";
+import { LuInfo } from "react-icons/lu";
 
 // Header that displays the logo and navigation
 const Header = ({ restartGame }) => {
@@ -6,7 +7,7 @@ const Header = ({ restartGame }) => {
         <header className="main-header">
             <span className="logo">Hangman</span>
             <nav className="navbar">
-                <Button text="Restart" onClick={restartGame} />
+                <LuRefreshCw onClick={restartGame} className="icon" />
             </nav>
         </header>
     );

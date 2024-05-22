@@ -6,7 +6,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FinalMessage from "./components/FinalMessage";
 import { VscLoading } from "react-icons/vsc";
-import { FaLightbulb } from "react-icons/fa";
+import { LuLightbulb } from "react-icons/lu";
+import { LuRefreshCw } from "react-icons/lu";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 import hangmanImg1 from "./assets/hangmandrawings/state1.GIF";
@@ -50,6 +51,7 @@ function App() {
     const [wordSet, setWordSet] = useState(false); // sets whether the random word has been set
     const [loading, setLoading] = useState(true);
     const [hintRevealed, setHintRevealed] = useState(-1);
+    const [curPressedKey, setCurPressedKey] = useState(null);
     const [alphabets, setAlphabets] = useState([
         { char: "a", set: null },
         { char: "b", set: null },
@@ -77,7 +79,6 @@ function App() {
         { char: "x", set: null },
         { char: "y", set: null },
         { char: "z", set: null },
-        { char: "-", set: null },
     ]); // used to change the color of the letter by changing the set value in each letter to green(true) or red(false)
 
     const [hangmanImage, setHangmanImage] = useState(hangmanImgs[0]); // state to keep track of the image being displayed to the user when they get a character wrong
@@ -103,7 +104,7 @@ function App() {
                 console.log(randomInt);
                 const randomCategory = categories[randomInt];
 
-                const prompt = `Generate a random interesting, fun and unique example that doed not include special characters or numbers from this specific category: ${randomCategory} , provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint, do not include quotations in the hint. Please provide word, hints, and category in this exact json format:  '{"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}'`;
+                const prompt = `Generate a random interesting, fun and unique example that doed not include special characters or numbers from this specific category: ${randomCategory} , provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint, do not include quotations in the hint. Please provide word, hints, and category in valid json format:  '{"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}'`;
 
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
@@ -256,7 +257,6 @@ function App() {
             { char: "x", set: null },
             { char: "y", set: null },
             { char: "z", set: null },
-            { char: "-", set: null },
         ]);
         setWord([]);
         setHangmanImage(hangmanImgs[0]);
@@ -289,57 +289,63 @@ function App() {
         <main className="main-container">
             <Header restartGame={restartGame} />
             {loading && !wordSet ? (
-                <VscLoading />
+                <>
+                    <VscLoading />
+                    <p>Fetching random word...</p>
+                </>
             ) : (
                 <>
-                    {correctCounter !== word.length && wrongCounter <= 11 ? (
-                        <FaLightbulb onClick={showHint} />
-                    ) : undefined}
-                    {hintRevealed >= 0 && (
-                        <>
-                            <p>{hintRevealed}</p>
-                            <div>
-                                {wordDetails.hints.map(
-                                    (hint, index) =>
-                                        hint.revealed === true && (
-                                            <p key={index}>{hint.hint}</p>
-                                        )
-                                )}
-                            </div>
-                        </>
-                    )}
-                    <section className="intro">
-                        <p>Word from category: {wordDetails.category}</p>
-                    </section>
-                    <section className="intro">
-                        <p>
-                            Start guesing the word by clicking on a letter to
-                            begin the game. You can restart to change the word.
-                        </p>
-                    </section>
                     <section>
-                        <div className="secondary-container">
-                            <Hangman image={hangmanImage} />
+                        {correctCounter === word.length || wrongCounter > 11 ? (
+                            <FinalMessage
+                                correctCounter={correctCounter}
+                                wrongCounter={wrongCounter}
+                                word={word}
+                                correctWord={wordDetails.word}
+                                restartGame={restartGame}
+                            />
+                        ) : (
+                            <>
+                                <p>Chosen Category: {wordDetails.category}</p>
 
-                            {correctCounter === word.length ||
-                            wrongCounter > 11 ? (
-                                <FinalMessage
-                                    correctCounter={correctCounter}
-                                    wrongCounter={wrongCounter}
-                                    word={word}
-                                    correctWord={wordDetails.word}
-                                    restartGame={restartGame}
+                                <p>
+                                    Start the game by clicking on a letter. You
+                                    can generate a new random word by clicking
+                                    on the "refresh" icon. Clicking on the
+                                    "lightbulb" icon provides a hint for the
+                                    current word.
+                                </p>
+
+                                <Hangman image={hangmanImage} />
+
+                                <LuLightbulb
+                                    onClick={showHint}
+                                    className="icon"
                                 />
-                            ) : undefined}
-                        </div>
+                                {hintRevealed >= 0 && (
+                                    <>
+                                        <div>
+                                            {wordDetails.hints.map(
+                                                (hint, index) =>
+                                                    hint.revealed === true && (
+                                                        <p key={index}>
+                                                            {hint.hint}
+                                                        </p>
+                                                    )
+                                            )}
+                                        </div>
+                                    </>
+                                )}
 
-                        <Word word={word} />
+                                <Word word={word} />
 
-                        <Alphabets
-                            alphabets={alphabets}
-                            checkAlphabet={checkAlphabet}
-                            word={word}
-                        />
+                                <Alphabets
+                                    alphabets={alphabets}
+                                    checkAlphabet={checkAlphabet}
+                                    word={word}
+                                />
+                            </>
+                        )}
                     </section>
                 </>
             )}
