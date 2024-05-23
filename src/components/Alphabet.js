@@ -3,9 +3,7 @@
 const Alphabet = ({ alphabet, checkAlphabet, word, alphabets }) => {
     return (
         <span
-            className={`alphabet ${alphabet.set === true && "correct"} ${
-                alphabet.set === false && "incorrect"
-            } alphabet-${alphabet.char}`}
+            className={`alphabet ${alphabet.set !== null && "disappear"}`}
             onClick={() => checkAlphabet(alphabet.char, word, alphabets)}>
             {alphabet.char}
         </span>

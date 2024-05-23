@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import Word from "./components/Word";
 import Alphabets from "./components/Alphabets";
 import Hangman from "./components/Hangman";
-import Header from "./components/Header";
 import Footer from "./components/Footer";
 import FinalMessage from "./components/FinalMessage";
-import { VscLoading } from "react-icons/vsc";
+import { LuInfo } from "react-icons/lu";
 import { LuLightbulb } from "react-icons/lu";
 import { LuRefreshCw } from "react-icons/lu";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -288,9 +287,28 @@ function App() {
         infoModal.close();
     };
 
+    const showHintsModal = () => {
+        const hintsModal = document.querySelector("#dialog-hints");
+
+        hintsModal.showModal();
+    };
+    const closeHintsModal = () => {
+        const hintsModal = document.querySelector("#dialog-hints");
+
+        hintsModal.close();
+    };
+
     return (
         <main className="main-container">
-            <Header restartGame={restartGame} showInfoModal={showInfoModal} />
+            <div className="navbar-wrapper">
+                <nav className="navbar">
+                    <div className="logo">
+                        H
+                        {<LuRefreshCw onClick={restartGame} className="icon" />}
+                        ngman
+                    </div>
+                </nav>
+            </div>
             {loading && !wordSet ? (
                 <div className="loading-animation">
                     <div className="loader" />
@@ -309,28 +327,25 @@ function App() {
                             />
                         ) : (
                             <>
-                                <Hangman image={hangmanImage} />
-
-                                <LuLightbulb
-                                    onClick={showHint}
-                                    className="icon"
-                                />
-                                {hintRevealed >= 0 && (
-                                    <>
-                                        <div>
-                                            {wordDetails.hints.map(
-                                                (hint, index) =>
-                                                    hint.revealed === true && (
-                                                        <p key={index}>
-                                                            {hint.hint}
-                                                        </p>
-                                                    )
-                                            )}
-                                        </div>
-                                    </>
-                                )}
-
-                                <Word word={word} />
+                                <div className="hangman-container">
+                                    <Hangman image={hangmanImage} />
+                                    <Word word={word} />
+                                </div>
+                                <div className="hints">
+                                    <LuLightbulb
+                                        onClick={showHint}
+                                        className="icon"
+                                    />
+                                    <LuInfo
+                                        className="icon"
+                                        onClick={showInfoModal}
+                                    />
+                                    <button
+                                        className="btn btn-close"
+                                        onClick={showHintsModal}>
+                                        Hints
+                                    </button>
+                                </div>
 
                                 <Alphabets
                                     alphabets={alphabets}
@@ -342,16 +357,38 @@ function App() {
                     </section>
                 </>
             )}
+            <dialog id="dialog-hints">
+                <h3>Hints: </h3>
+                <div className="hints">
+                    {wordDetails.hints.length > 0 ? (
+                        wordDetails.hints.map(
+                            (hint, index) =>
+                                hint.revealed === true && (
+                                    <p key={index} className="hint">
+                                        {hint.hint}
+                                    </p>
+                                )
+                        )
+                    ) : (
+                        <p>
+                            No hints generated. Clicking on the <LuLightbulb />{" "}
+                            icon provides a hint for the current word.{" "}
+                        </p>
+                    )}
+                </div>
+                <button className="btn btn-close" onClick={closeHintsModal}>
+                    Close
+                </button>
+            </dialog>
             <dialog id="dialog">
-                <p>Chosen Category: {wordDetails.category}</p>
-
-                <p>
+                <h3>Chosen Category: {wordDetails.category}</h3>
+                <p className="modalInfoDescription">
                     Start the game by clicking on a letter. You can generate a
-                    new random word by clicking on the "refresh" icon. Clicking
-                    on the "lightbulb" icon provides a hint for the current
-                    word.
+                    new random word by clicking on the {<LuRefreshCw />} icon.
+                    Clicking on the <LuLightbulb /> icon provides a hint for the
+                    current word.
                 </p>
-                <button className="btn" onClick={closeInfoModal}>
+                <button className="btn btn-close" onClick={closeInfoModal}>
                     Close
                 </button>
             </dialog>

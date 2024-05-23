@@ -110,7 +110,7 @@ select {
 .main-header {
     display: flex;
     align-items: center;
-    /* justify-content: space-between; */
+    justify-content: space-around;
     gap: 4em;
     margin: 0.6em 0 0.6em 0;
 }
@@ -122,10 +122,29 @@ select {
     margin-top: 3em;
 }
 
+/* Nav menu */
+.navbar-wrapper {
+    display: flex;
+    /* justify-content: center; */
+    margin-bottom: 0.8em;
+}
+
+.navbar {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    gap: 1.6em;
+}
+
 /* Logo Styling */
 .logo {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    text-align: center;
     font-weight: bolder;
+    display: flex;
+    align-items: center;
+    /* color: #0891b2; */
+    margin-bottom: 0.2em;
 }
 
 /* Word Styling */
@@ -133,19 +152,19 @@ select {
     display: flex;
     flex-wrap: wrap;
     gap: 0.8em;
-    margin-bottom: 1.5em;
+    margin: 2em 0;
 }
 
 /* Character styling */
 .character {
     /* Border bottom for the underline of the character */
     width: 1em;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 3px black solid;
+    border-bottom: 2px #333 solid;
 
     /* prevent the user from trying to reveal the text by trying to copy it*/
     -webkit-user-select: none;
@@ -157,7 +176,7 @@ select {
 
 /* When the characters 'correct' value is changed to true */
 .character.show {
-    color: #262626;
+    color: #333;
 }
 
 .character.space {
@@ -174,16 +193,17 @@ select {
 
 /* Alphabet styling */
 .alphabet {
-    border: #333 solid 0.8px;
-    width: 1.6em;
-    height: 1.6em;
+    border: #333 solid 1px;
+    width: 1.4em;
+    height: 1.4em;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
     text-transform: uppercase;
     cursor: pointer;
-    border-radius: 0.5rem;
+    border-radius: 0.3rem;
+    color: #333;
 }
 
 .alphabet:hover {
@@ -210,8 +230,7 @@ select {
     }
 }
 
-.alphabet.correct,
-.alphabet.incorrect {
+.alphabet.disappear {
     display: none;
 }
 
@@ -228,24 +247,26 @@ select {
 
 /* button styling */
 .btn {
-    border: 2px solid #333;
+    border: 1px solid #333;
     font-weight: bold;
-    padding: 0.2em 0.4em;
-    border-radius: 0.4rem;
+    padding: 0.2em 0.6em;
+    border-radius: 0.3rem;
     background-color: #fff;
     cursor: pointer;
-    text-transform: uppercase;
 }
 
 .btn:hover {
     background-color: #0891b2;
-    border: #0891b2 2px solid;
+    border: #0891b2 1px solid;
     color: #fff;
 }
 
+.btn-close {
+    margin-top: 0.8em;
+}
+
 .icon {
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1.8rem;
     background-color: #fff;
     cursor: pointer;
 }
@@ -256,9 +277,9 @@ select {
 
 /* Rules modal styling */
 :modal {
-    border-radius: 0.6rem;
+    border-radius: 0.3rem;
     width: 30em;
-    padding: 1.6em;
+    padding: 0.8em 1.2em;
 }
 
 .rules::backdrop {
@@ -268,12 +289,6 @@ select {
 .rules-content {
     display: grid;
     gap: 0.8em;
-}
-
-/* Nav menu */
-.navbar {
-    display: flex;
-    gap: 0.4em;
 }
 
 .image-hints {
@@ -293,4 +308,18 @@ select {
     to {
         clip-path: inset(0 -34% 0 0);
     }
+}
+
+.hints {
+    margin: 0.8em 0;
+}
+
+.hangman-img {
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+    border-radius: 0.4em;
+    padding: 0.4em 0.8em;
+}
+
+.modalInfoDescription {
+    margin: 0.6em 0;
 }
