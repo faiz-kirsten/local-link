@@ -331,7 +331,7 @@ function App() {
                                     <Hangman image={hangmanImage} />
                                     <Word word={word} />
                                 </div>
-                                <div className="hints">
+                                <div className="secondary-navbar">
                                     <LuLightbulb
                                         onClick={showHint}
                                         className="icon"
@@ -341,9 +341,9 @@ function App() {
                                         onClick={showInfoModal}
                                     />
                                     <button
-                                        className="btn btn-close"
+                                        className="btn"
                                         onClick={showHintsModal}>
-                                        Hints
+                                        View Hints
                                     </button>
                                 </div>
 
@@ -360,13 +360,13 @@ function App() {
             <dialog id="dialog-hints">
                 <h3>Hints: </h3>
                 <div className="hints">
-                    {wordDetails.hints.length > 0 ? (
+                    {hintRevealed >= 0 ? (
                         wordDetails.hints.map(
                             (hint, index) =>
                                 hint.revealed === true && (
-                                    <p key={index} className="hint">
+                                    <li key={index} className="hint">
                                         {hint.hint}
-                                    </p>
+                                    </li>
                                 )
                         )
                     ) : (
