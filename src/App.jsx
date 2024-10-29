@@ -105,7 +105,7 @@ function App() {
                 const prompt = `Generate a random interesting, fun and unique example that doed not include special characters or numbers from this specific category: ${randomCategory} , provide at least 3 hints that start off very general and less obvious and become slowly and progressively more helpful with each hint, do not include quotations in the hint. Please provide word, hints, and category in valid json format:  '{"word" : "Lion", "category": "Animal" , "hints": [{"hint": "...", "num": "1"}, {"hint": "...", "num": "2"}, {"hint": "...", "num": "3"}, {"hint": "...", "num": "4"}, {"hint": "...", "num": "5"}]}'`;
 
                 const result = await model.generateContent(prompt);
-                const response = await result.response;
+                const response = result.response;
                 const text = response.text();
 
                 function isValidJson(json) {
@@ -327,6 +327,9 @@ function App() {
                             />
                         ) : (
                             <>
+                                <h1 className="heading-1">
+                                    Chosen Category: {wordDetails.category}
+                                </h1>
                                 <div className="hangman-container">
                                     <Hangman image={hangmanImage} />
                                     <Word word={word} />
@@ -380,8 +383,9 @@ function App() {
                     Close
                 </button>
             </dialog>
+            -
             <dialog id="dialog">
-                <h3>Chosen Category: {wordDetails.category}</h3>
+                <h3>Info: </h3>
                 <p className="modalInfoDescription">
                     Start the game by clicking on a letter. You can generate a
                     new random word by clicking on the {<LuRefreshCw />} icon.

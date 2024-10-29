@@ -147,6 +147,9 @@ select {
     margin-bottom: 0.2em;
 }
 
+.heading-1 {
+    margin-bottom: 0.8rem;
+}
 /* Word Styling */
 .word {
     display: flex;
